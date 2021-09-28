@@ -8,4 +8,4 @@ app.use(express.json({ limit: '5mb' }));
 
 app.use(rotas);
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
