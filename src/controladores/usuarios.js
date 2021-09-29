@@ -56,7 +56,7 @@ const atualizarPerfil = async (req, res) => {
             senha = await bcrypt.hash(senha, 10);
         }
 
-        if (email !== req.usuario.email) {
+        if (email && email !== req.usuario.email) {
             const emailUsuarioExiste = await knex('usuarios').where({ email }).first();
 
             if (emailUsuarioExiste) {
