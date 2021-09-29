@@ -44,10 +44,6 @@ const obterClientes = async (req, res) => {
     try {
         const clientesDoUsuario = await knex('clientes').where({ usuario_id: id });
 
-        if (!clientesDoUsuario) {
-            return res.status(200).json("Você ainda não tem clientes cadastrados!");
-        }
-
         return res.status(200).json(clientesDoUsuario);
 
     } catch (error) {
