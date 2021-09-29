@@ -1,6 +1,7 @@
 const knex = require('../conexao');
 const bcrypt = require('bcrypt');
 const schemaCadastroUsuario = require('../validacoes/schemaCadastroUsuario');
+const schemaAtualizarUsuario = require('../validacoes/schemaAtualizarUsuario');
 
 const cadastrarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body;
@@ -57,10 +58,12 @@ const atualizarPerfil = async (req, res) => {
         }
 
         if (email && email !== req.usuario.email) {
+            await schemaAtualizarUsuario.validate(req.body);
+
             const emailUsuarioExiste = await knex('usuarios').where({ email }).first();
 
             if (emailUsuarioExiste) {
-                return res.status(404).json('O email informado já está cadastrado.');
+                return res.status(400).json('O email informado já está cadastrado.');
             }
         }
 
