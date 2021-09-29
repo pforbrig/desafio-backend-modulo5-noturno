@@ -3,11 +3,12 @@ const schemaCadastroCliente = require('../validacoes/schemaCadastroCliente');
 
 const cadastrarCliente = async (req, res) => {
     const { nome, email, telefone, cpf, cep, logradouro, complemento, bairro, cidade, estado } = req.body;
+    const { id } = req.usuario;
 
     try {
         await schemaCadastroCliente.validate(req.body);
 
-        const cpfExiste = await knex('clientes').where({ cpf, usuario_id: req.usuario.id }).first();
+        const cpfExiste = await knex('clientes').where({ cpf, usuario_id: id }).first();
 
         if (cpfExiste) {
             return res.status(400).json("Você já tem um cliente com esse CPF!");
@@ -24,7 +25,7 @@ const cadastrarCliente = async (req, res) => {
             bairro,
             cidade,
             estado,
-            usuario_id: req.usuario.id,
+            usuario_id: id,
         }).returning('*');
 
         if (!cliente) {
@@ -38,6 +39,20 @@ const cadastrarCliente = async (req, res) => {
     }
 };
 const obterClientes = async (req, res) => {
+    const { id } = req.usuario;
+
+    try {
+        const clientesDoUsuario = await knex('clientes').where({ usuario_id: id });
+
+        if (!clientesDoUsuario) {
+            return res.status(200).json("Você ainda não tem clientes cadastrados!");
+        }
+
+        return res.status(200).json(clientesDoUsuario);
+
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
 };
 
 module.exports = {
