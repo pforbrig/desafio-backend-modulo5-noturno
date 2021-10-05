@@ -80,8 +80,9 @@ const atualizarPerfil = async (req, res) => {
         if (!usuarioAtualizado) {
             return res.status(400).json("O usuario não foi atualizado");
         }
+        const resposta = await knex('usuarios').where ({ id })
 
-        return res.status(200).json('O usuario foi atualizado com sucesso.');
+        return res.status(200).json(resposta);
 
     } catch (error) {
         return res.status(400).json(error.message);
