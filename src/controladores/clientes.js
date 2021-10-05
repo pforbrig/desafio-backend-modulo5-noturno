@@ -72,8 +72,7 @@ const obterCliente = async (req, res) => {
     }
 }
 const editarCliente = async (req, res) => {
-    let { nome, email, telefone, cpf, cep, logradouro, complemento, bairro, cidade, estado, referencia } = req.body;
-    const { usuario_id } = req.usuario;
+    const { nome, email, telefone, cpf, cep, logradouro, complemento, bairro, cidade, estado, referencia } = req.body;
     const { id } = req.params;
 
     if (!nome && !email && !telefone && !cpf && !cep && !logradouro && !complemento && !bairro && !cidade && !estado && !referencia) {
@@ -81,40 +80,54 @@ const editarCliente = async (req, res) => {
     }
 
     try {
-        const clienteExiste = await knex('clientes').where({ id }).first();
+        const clienteExiste = await knex('clientes').where({
+            id,
+            usuario_id: req.usuario.id
+        }).first();
 
-        if (!usuarioExiste) {
-            return res.status(404).json('Usuario não encontrado');
+        if (!clienteExiste) {
+            return res.status(404).json('Cliente não encontrado ou não está vinculado ao usuario logado!');
         }
 
-        if (senha) {
-            senha = await bcrypt.hash(senha, 10);
-        }
+        if (cpf && cpf !== clienteExiste.cpf) {
 
-        if (email && email !== req.usuario.email) {
-            await schemaAtualizarUsuario.validate(req.body);
+            const cpfClienteExiste = await knex('clientes').where({
+                cpf,
+                usuario_id: req.usuario.id
+            }).first();
 
-            const emailUsuarioExiste = await knex('usuarios').where({ email }).first();
-
-            if (emailUsuarioExiste) {
-                return res.status(400).json('O email informado já está cadastrado.');
+            if (cpfClienteExiste) {
+                return res.status(400).json('Você já possui um cliente com o cpf informado.');
             }
         }
 
-        const usuarioAtualizado = await knex('usuarios')
-            .where({ id })
+        const clienteAtualizado = await knex('clientes')
+            .where({
+                id,
+                usuario_id: req.usuario.id
+            })
             .update({
                 nome,
                 email,
-                senha,
+                telefone,
                 cpf,
-                telefone
+                cep,
+                logradouro,
+                complemento,
+                bairro,
+                cidade,
+                estado,
+                referencia
             });
 
-        if (!usuarioAtualizado) {
-            return res.status(400).json("O usuario não foi atualizado");
+        if (!clienteAtualizado) {
+            return res.status(400).json("O cliente não foi atualizado");
         }
-        const resposta = await knex('usuarios').where({ id }).first();
+
+        const resposta = await knex('clientes').where({
+            id,
+            usuario_id: req.usuario.id
+        }).first();
 
         return res.status(200).json(resposta);
 
