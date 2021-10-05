@@ -23,6 +23,8 @@ rotas.put('/perfil', usuarios.atualizarPerfil);
 
 // cadastrar e obter clientes
 rotas.post('/clientes', clientes.cadastrarCliente);
-rotas.get('/clientes', clientes.obterClientes);
+rotas.get('/clientes', clientes.listarClientes);
+rotas.get('/clientes/:id', clientes.obterCliente);
+rotas.put('/clientes', clientes.editarCliente);
 
 module.exports = rotas;
