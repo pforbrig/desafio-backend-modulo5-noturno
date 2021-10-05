@@ -39,6 +39,13 @@ const obterPerfil = async (req, res) => {
 };
 
 const atualizarPerfil = async (req, res) => {
+
+    for (const prop in req.body) {
+        if (req.body[prop].length === 0) {
+            delete req.body[prop]
+        }
+    }
+
     let { nome, email, senha, cpf, telefone } = req.body;
     const { id } = req.usuario;
 
@@ -80,7 +87,7 @@ const atualizarPerfil = async (req, res) => {
         if (!usuarioAtualizado) {
             return res.status(400).json("O usuario não foi atualizado");
         }
-        const resposta = await knex('usuarios').where ({ id })
+        const resposta = await knex('usuarios').where({ id })
 
         return res.status(200).json(resposta);
 
