@@ -19,7 +19,7 @@ rotas.use(filtroCampoNulo);
 
 // obter e atualizar perfil do usuario logado
 rotas.get('/perfil', usuarios.obterPerfil);
-rotas.put('/perfil', usuarios.atualizarPerfil);
+rotas.put('/perfil', usuarios.editarPerfil);
 
 // cadastrar e obter clientes
 rotas.post('/clientes', clientes.cadastrarCliente);

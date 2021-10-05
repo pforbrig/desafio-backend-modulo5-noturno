@@ -38,7 +38,7 @@ const obterPerfil = async (req, res) => {
     return res.status(200).json(req.usuario);
 };
 
-const atualizarPerfil = async (req, res) => {
+const editarPerfil = async (req, res) => {
     let { nome, email, senha, cpf, telefone } = req.body;
     const { id } = req.usuario;
 
@@ -67,7 +67,7 @@ const atualizarPerfil = async (req, res) => {
             }
         }
 
-        const usuarioAtualizado = await knex('usuarios')
+        const usuarioEditado = await knex('usuarios')
             .where({ id })
             .update({
                 nome,
@@ -77,8 +77,8 @@ const atualizarPerfil = async (req, res) => {
                 telefone
             });
 
-        if (!usuarioAtualizado) {
-            return res.status(400).json("O usuario não foi atualizado");
+        if (!usuarioEditado) {
+            return res.status(400).json("O perfil não foi editado");
         }
         const resposta = await knex('usuarios').where({ id }).first();
 
@@ -92,5 +92,5 @@ const atualizarPerfil = async (req, res) => {
 module.exports = {
     cadastrarUsuario,
     obterPerfil,
-    atualizarPerfil
+    editarPerfil
 }
