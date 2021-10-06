@@ -2,10 +2,16 @@ const express = require('express');
 const usuarios = require('./controladores/usuarios');
 const login = require('./controladores/login');
 const clientes = require('./controladores/clientes');
+const cobrancas = require('./controladores/cobrancas');
 const filtroLogin = require('./filtros/filtroLogin');
 const filtroCampoNulo = require('./filtros/filtroCampoNulo');
 
 const rotas = express();
+
+// cobrancas
+rotas.post('/cobrancas', cobrancas.cadastrarCobranca);
+rotas.get('/cobrancas/:usuario_id', cobrancas.listarCobrancas);
+
 
 // cadastro de usuario
 rotas.post('/usuarios', usuarios.cadastrarUsuario);
