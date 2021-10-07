@@ -8,10 +8,6 @@ const filtroCampoNulo = require('./filtros/filtroCampoNulo');
 
 const rotas = express();
 
-// cobrancas
-rotas.post('/cobrancas', cobrancas.cadastrarCobranca);
-rotas.get('/cobrancas/:usuario_id', cobrancas.listarCobrancas);
-
 
 // cadastro de usuario
 rotas.post('/usuarios', usuarios.cadastrarUsuario);
@@ -32,5 +28,9 @@ rotas.post('/clientes', clientes.cadastrarCliente);
 rotas.get('/clientes', clientes.listarClientes);
 rotas.get('/clientes/:id', clientes.obterCliente);
 rotas.put('/clientes', clientes.editarCliente);
+
+// cobrancas
+rotas.post('/cobrancas', cobrancas.cadastrarCobranca);
+rotas.get('/cobrancas', cobrancas.listarCobrancas);
 
 module.exports = rotas;

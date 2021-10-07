@@ -43,7 +43,27 @@ const listarClientes = async (req, res) => {
     const { id } = req.usuario;
 
     try {
-        const clientesDoUsuario = await knex('clientes').where({ usuario_id: id });
+        const clientesDoUsuario = await knex('clientes')
+            .where({ usuario_id: id });
+
+        for (const cliente of clientesDoUsuario) {
+
+            const totalCobrancas = await knex('cobrancas')
+                .where({ cliente_id: cliente.id })
+                .sum('valor');
+
+            cliente.cobrancasFeitas = totalCobrancas[0].sum;
+        }
+        for (const cliente of clientesDoUsuario) {
+
+            const pagamentosCobrancas = await knex('cobrancas')
+                .where({ cliente_id: cliente.id, status: 'pago' })
+                .sum('valor');
+
+            cliente.cobrancasPagas = pagamentosCobrancas[0].sum;
+        }
+
+
 
         return res.status(200).json(clientesDoUsuario);
 
@@ -59,7 +79,7 @@ const obterCliente = async (req, res) => {
         const cliente = await knex('clientes').where({
             id,
             usuario_id: usuario.id
-        }).first();
+        });
 
         if (!cliente) {
             return res.status(404).json('Cliente não encontrado ou não está vinculado ao usuario logado!');
