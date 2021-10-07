@@ -4,7 +4,7 @@ const login = require('./controladores/login');
 const clientes = require('./controladores/clientes');
 const cobrancas = require('./controladores/cobrancas');
 const filtroLogin = require('./filtros/filtroLogin');
-const filtroCampoNulo = require('./filtros/filtroCampoNulo');
+const filtroCampoVazio = require('./filtros/filtroCampoVazio');
 
 const rotas = express();
 
@@ -17,7 +17,7 @@ rotas.post('/login', login.logar);
 
 // filtros
 rotas.use(filtroLogin);
-rotas.use(filtroCampoNulo);
+rotas.use(filtroCampoVazio);
 
 // obter e atualizar perfil do usuario logado
 rotas.get('/perfil', usuarios.obterPerfil);

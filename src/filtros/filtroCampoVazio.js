@@ -1,4 +1,4 @@
-const filtroCampoNulo = async (req, res, next) => {
+const filtroCampoVazio = async (req, res, next) => {
 
     for (const prop in req.body) {
         if (req.body[prop].length === 0) {
@@ -8,4 +8,4 @@ const filtroCampoNulo = async (req, res, next) => {
     next();
 }
 
-module.exports = filtroCampoNulo;
+module.exports = filtroCampoVazio;

@@ -79,11 +79,17 @@ const obterCliente = async (req, res) => {
         const cliente = await knex('clientes').where({
             id,
             usuario_id: usuario.id
-        });
+        }).first();
 
         if (!cliente) {
             return res.status(404).json('Cliente não encontrado ou não está vinculado ao usuario logado!');
         }
+
+        const cobrancasCliente = await knex('cobrancas').where({
+            cliente_id: id
+        })
+
+        cliente.cobrancas = cobrancasCliente;
 
         return res.status(200).json(cliente);
 
