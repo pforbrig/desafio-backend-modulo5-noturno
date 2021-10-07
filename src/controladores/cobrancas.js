@@ -20,22 +20,25 @@ const cadastrarCobranca = async (req, res) => {
 
         }
         res.status(200).json(adicionarCobranca[0]);
+
     } catch (error) {
         return res.status(400).json(error.message);
     }
 }
 
 const listarCobrancas = async (req, res) => {
+    const { id } = req.usuario
 
     try {
-        const query = `select cobrancas.id, clientes.nome, cobrancas.descricao, cobrancas.valor, cobrancas.vencimento, cobrancas.status from cobrancas left join clientes on cobrancas.cliente_id = clientes.id where cobrancas.usuario_id = ${req.usuario.id}`;
-        const buscaCobrancas = await knex.raw(query, [req.usuario.id])
 
-        if (!buscaCobrancas) {
+        const cobrancasDoUsuario = await knex('cobrancas')
+            .where({ usuario_id: id });
+
+        if (!cobrancasDoUsuario) {
             return res.status(400).json("Não foi possivel buscar as cobrancas.");
         }
 
-        res.status(200).json(buscaCobrancas.rows);
+        res.status(200).json(cobrancasDoUsuario);
 
     } catch (error) {
         return res.status(400).json(error.message);
