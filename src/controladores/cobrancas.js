@@ -32,7 +32,9 @@ const listarCobrancas = async (req, res) => {
     try {
 
         const cobrancasDoUsuario = await knex('cobrancas')
-            .where({ usuario_id: id });
+            .join('clientes', 'cliente_id', 'clientes.id')
+            .select('cobrancas.id', 'clientes.nome', 'cobrancas.descricao', 'cobrancas.valor', 'cobrancas.vencimento')
+            .where({ 'cobrancas.usuario_id': id });
 
         if (!cobrancasDoUsuario) {
             return res.status(400).json("Não foi possivel buscar as cobrancas.");
