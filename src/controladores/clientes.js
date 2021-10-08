@@ -62,6 +62,19 @@ const listarClientes = async (req, res) => {
 
             cliente.cobrancasPagas = pagamentosCobrancas[0].sum;
         }
+        for (const cliente of clientesDoUsuario) {
+
+            const cobrancasVencidas = await knex('cobrancas')
+                .where({ cliente_id: cliente.id })
+                .andWhere('vencimento', '<', new Date());
+
+            if (cobrancasVencidas.length > 0) {
+                cliente.status = 'INADIMPLENTE'
+            } else {
+                cliente.status = 'EM DIA'
+            }
+
+        }
 
 
 
