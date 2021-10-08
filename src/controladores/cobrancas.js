@@ -49,6 +49,9 @@ const listarCobrancas = async (req, res) => {
             cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy')
         }
 
+        cobrancasDoUsuario.pendentes = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'PENDENTE').length;
+        cobrancasDoUsuario.vencidas = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'VENCIDAS').length;
+
         res.status(200).json(cobrancasDoUsuario);
 
     } catch (error) {

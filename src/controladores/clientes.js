@@ -73,10 +73,9 @@ const listarClientes = async (req, res) => {
             } else {
                 cliente.status = 'EM DIA'
             }
-
         }
-
-
+        clientesDoUsuario.emdia = clientesDoUsuario.filter((cliente) => cliente.status === 'EM DIA').length;
+        clientesDoUsuario.inadimplentes = clientesDoUsuario.filter((cliente) => cliente.status === 'INADIMPLENTE').length;
 
         return res.status(200).json(clientesDoUsuario);
 
