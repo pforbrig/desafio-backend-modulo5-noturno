@@ -1,4 +1,5 @@
 const knex = require('../conexao');
+const { format } = require('date-fns')
 const schemaCadastroCobranca = require('../validacoes/schemaCadastroCobranca');
 
 const cadastrarCobranca = async (req, res) => {
@@ -38,6 +39,14 @@ const listarCobrancas = async (req, res) => {
 
         if (!cobrancasDoUsuario) {
             return res.status(400).json("Não foi possivel buscar as cobrancas.");
+        }
+
+        for (const cobranca of cobrancasDoUsuario) {
+            cobranca.status = 'PENDENTE'
+            if (+cobranca.vencimento < new Date()) {
+                cobranca.status = 'VENCIDA'
+            }
+            cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy')
         }
 
         res.status(200).json(cobrancasDoUsuario);
