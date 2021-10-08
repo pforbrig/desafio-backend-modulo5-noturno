@@ -49,10 +49,10 @@ const listarCobrancas = async (req, res) => {
             cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy')
         }
 
-        cobrancasDoUsuario.pendentes = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'PENDENTE').length;
-        cobrancasDoUsuario.vencidas = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'VENCIDAS').length;
+        const cobrancasPendentes = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'PENDENTE').length;
+        const cobrancasVencidas = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'VENCIDA').length;
 
-        res.status(200).json(cobrancasDoUsuario);
+        res.status(200).json({ cobrancasDoUsuario, cobrancasPendentes, cobrancasVencidas });
 
     } catch (error) {
         return res.status(400).json(error.message);
