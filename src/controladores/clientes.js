@@ -74,10 +74,10 @@ const listarClientes = async (req, res) => {
                 cliente.status = 'EM DIA'
             }
         }
-        clientesDoUsuario.emdia = clientesDoUsuario.filter((cliente) => cliente.status === 'EM DIA').length;
-        clientesDoUsuario.inadimplentes = clientesDoUsuario.filter((cliente) => cliente.status === 'INADIMPLENTE').length;
+        const clientesEmDia = clientesDoUsuario.filter((cliente) => cliente.status === 'EM DIA').length;
+        const clientesInadimplentes = clientesDoUsuario.filter((cliente) => cliente.status === 'INADIMPLENTE').length;
 
-        return res.status(200).json(clientesDoUsuario);
+        return res.status(200).json({ clientesDoUsuario, clientesEmDia, clientesInadimplentes });
 
     } catch (error) {
         return res.status(400).json(error.message);
