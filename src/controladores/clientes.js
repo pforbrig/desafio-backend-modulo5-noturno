@@ -101,6 +101,10 @@ const obterCliente = async (req, res) => {
             cliente_id: id
         })
 
+        for (const cobranca of cobrancasCliente) {
+            cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy')
+        }
+
         cliente.cobrancas = cobrancasCliente;
 
         return res.status(200).json(cliente);
