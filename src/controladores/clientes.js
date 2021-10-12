@@ -103,6 +103,7 @@ const obterCliente = async (req, res) => {
         })
 
         for (const cobranca of cobrancasCliente) {
+            cobranca.valor = (cobranca.valor / 100).toLocaleString('pt-br', { minimumFractionDigits: 2 })
             cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy')
         }
 
