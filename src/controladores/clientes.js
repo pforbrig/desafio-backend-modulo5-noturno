@@ -58,7 +58,7 @@ const listarClientes = async (req, res) => {
         for (const cliente of clientesDoUsuario) {
 
             const pagamentosCobrancas = await knex('cobrancas')
-                .where({ cliente_id: cliente.id, status: 'pago' })
+                .where({ cliente_id: cliente.id, status: 'PAGO' })
                 .sum('valor');
 
             cliente.cobrancasPagas = (pagamentosCobrancas[0].sum / 100).toLocaleString('pt-br', { minimumFractionDigits: 2 });
