@@ -34,7 +34,7 @@ const listarCobrancas = async (req, res) => {
 
         const cobrancasDoUsuario = await knex('cobrancas')
             .join('clientes', 'cliente_id', 'clientes.id')
-            .select('cobrancas.id', 'clientes.nome', 'cobrancas.descricao', 'cobrancas.valor', 'cobrancas.vencimento')
+            .select('cobrancas.id', 'clientes.nome', 'cobrancas.descricao', 'cobrancas.valor', 'cobrancas.vencimento', 'cobrancas.status')
             .where({ 'cobrancas.usuario_id': id });
 
         if (!cobrancasDoUsuario) {
@@ -42,12 +42,16 @@ const listarCobrancas = async (req, res) => {
         }
 
         for (const cobranca of cobrancasDoUsuario) {
-            cobranca.valor = (cobranca.valor / 100).toLocaleString('pt-br', { minimumFractionDigits: 2 })
-            cobranca.status = 'PENDENTE'
-            if (+cobranca.vencimento < new Date()) {
-                cobranca.status = 'VENCIDA'
+            cobranca.valor = (cobranca.valor / 100).toLocaleString('pt-br', { minimumFractionDigits: 2 });
+            cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy');
+
+            if (cobranca.status === 'PENDENTE') {
+                if (+cobranca.vencimento < new Date()) {
+                    cobranca.status = 'VENCIDA'
+                    return
+                }
             }
-            cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy')
+
         }
 
         const cobrancasPendentes = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'PENDENTE').length;
