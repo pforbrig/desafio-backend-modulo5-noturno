@@ -53,7 +53,7 @@ const listarClientes = async (req, res) => {
                 .where({ cliente_id: cliente.id })
                 .sum('valor');
 
-            cliente.cobrancasFeitas = totalCobrancas[0].sum;
+            cliente.cobrancasFeitas = (totalCobrancas[0].sum / 100).toLocaleString('pt-br', { minimumFractionDigits: 2 });
         }
         for (const cliente of clientesDoUsuario) {
 
@@ -61,7 +61,7 @@ const listarClientes = async (req, res) => {
                 .where({ cliente_id: cliente.id, status: 'pago' })
                 .sum('valor');
 
-            cliente.cobrancasPagas = pagamentosCobrancas[0].sum;
+            cliente.cobrancasPagas = (pagamentosCobrancas[0].sum / 100).toLocaleString('pt-br', { minimumFractionDigits: 2 });
         }
         for (const cliente of clientesDoUsuario) {
 

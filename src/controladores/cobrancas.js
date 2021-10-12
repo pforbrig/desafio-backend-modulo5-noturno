@@ -1,5 +1,5 @@
 const knex = require('../conexao');
-const { format } = require('date-fns')
+const { format } = require('date-fns');
 const schemaCadastroCobranca = require('../validacoes/schemaCadastroCobranca');
 
 const cadastrarCobranca = async (req, res) => {
@@ -12,7 +12,7 @@ const cadastrarCobranca = async (req, res) => {
             usuario_id: req.usuario.id,
             descricao,
             status,
-            valor,
+            valor: (valor * 100),
             vencimento
         }).returning('*');
 
@@ -42,6 +42,7 @@ const listarCobrancas = async (req, res) => {
         }
 
         for (const cobranca of cobrancasDoUsuario) {
+            cobranca.valor = (cobranca.valor / 100).toLocaleString('pt-br', { minimumFractionDigits: 2 })
             cobranca.status = 'PENDENTE'
             if (+cobranca.vencimento < new Date()) {
                 cobranca.status = 'VENCIDA'
@@ -51,8 +52,9 @@ const listarCobrancas = async (req, res) => {
 
         const cobrancasPendentes = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'PENDENTE').length;
         const cobrancasVencidas = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'VENCIDA').length;
+        const cobrancasPagas = cobrancasDoUsuario.filter((cobranca) => cobranca.status === 'PAGO').length;
 
-        res.status(200).json({ cobrancasDoUsuario, cobrancasPendentes, cobrancasVencidas });
+        res.status(200).json({ cobrancasDoUsuario, cobrancasPendentes, cobrancasVencidas, cobrancasPagas });
 
     } catch (error) {
         return res.status(400).json(error.message);
