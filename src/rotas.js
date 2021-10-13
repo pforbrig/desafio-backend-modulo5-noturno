@@ -23,7 +23,7 @@ rotas.use(filtroCampoVazio);
 rotas.get('/perfil', usuarios.obterPerfil);
 rotas.put('/perfil', usuarios.editarPerfil);
 
-// cadastrar e obter clientes
+// clientes
 rotas.post('/clientes', clientes.cadastrarCliente);
 rotas.get('/clientes', clientes.listarClientes);
 rotas.get('/clientes/:id', clientes.obterCliente);
@@ -32,5 +32,7 @@ rotas.put('/clientes/:id', clientes.editarCliente);
 // cobrancas
 rotas.post('/cobrancas', cobrancas.cadastrarCobranca);
 rotas.get('/cobrancas', cobrancas.listarCobrancas);
+rotas.put('/cobrancas/:id', cobrancas.editarCobranca);
+rotas.delete('/cobrancas/:id', cobrancas.excluirCobranca);
 
 module.exports = rotas;

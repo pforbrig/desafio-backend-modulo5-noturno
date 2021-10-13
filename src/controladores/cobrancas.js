@@ -94,8 +94,55 @@ const excluirCobranca = async (req, res) => {
     }
 }
 
+const editarCobranca = async (req, res) => {
+    const { descricao, status, valor, vencimento } = req.body;
+    const { id } = req.params;
+
+    if (!descricao && !status && !valor && !vencimento) {
+        return res.status(400).json('Você deve informar ao menos um campo para editar a cobrança!');
+    }
+
+    try {
+        const cobrancaExiste = await knex('cobrancas').where({
+            id,
+            usuario_id: req.usuario.id
+        }).first();
+
+        if (!cobrancaExiste) {
+            return res.status(404).json('Cobrança não encontrada ou não está vinculado ao usuario logado!');
+        }
+
+        const cobrancaAtualizada = await knex('cobranca')
+            .where({
+                id,
+                usuario_id: req.usuario.id
+            })
+            .update({
+                descricao,
+                status,
+                valor,
+                vencimento
+            });
+
+        if (!cobrancaAtualizada) {
+            return res.status(400).json("Erro ao atualizar a cobrança!");
+        }
+
+        const resposta = await knex('cobrancas').where({
+            id,
+            usuario_id: req.usuario.id
+        }).first();
+
+        return res.status(200).json(resposta);
+
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+};
+
 module.exports = {
     cadastrarCobranca,
     listarCobrancas,
-    excluirCobranca
+    excluirCobranca,
+    editarCobranca
 };
