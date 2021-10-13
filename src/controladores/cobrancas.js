@@ -12,7 +12,7 @@ const cadastrarCobranca = async (req, res) => {
             usuario_id: req.usuario.id,
             descricao,
             status,
-            valor: (valor * 100),
+            valor: (valor.slice(2, -3) * 100),
             vencimento
         }).returning('*');
 
