@@ -15,6 +15,12 @@ const cadastrarCliente = async (req, res) => {
             return res.status(400).json("Você já tem um cliente com esse CPF!");
         }
 
+        const emailExiste = await knex('clientes').where({ email, usuario_id: id }).first();
+
+        if (emailExiste) {
+            return res.status(400).json("Você já tem um cliente com esse email!");
+        }
+
         const cliente = await knex('clientes').insert({
             nome,
             email,
@@ -142,6 +148,17 @@ const editarCliente = async (req, res) => {
 
             if (cpfClienteExiste) {
                 return res.status(400).json('Você já possui um cliente com o cpf informado.');
+            }
+        }
+        if (email && email !== clienteExiste.email) {
+
+            const emailClienteExiste = await knex('clientes').where({
+                email,
+                usuario_id: req.usuario.id
+            }).first();
+
+            if (emailClienteExiste) {
+                return res.status(400).json('Você já possui um cliente com o email informado.');
             }
         }
 
