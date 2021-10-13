@@ -65,7 +65,37 @@ const listarCobrancas = async (req, res) => {
     }
 }
 
+const excluirCobranca = async (req, res) => {
+    const { usuario } = req;
+    const { id } = req.params;
+
+    try {
+        const cobrancaEncontrada = await knex('cobrancas').where({
+            id,
+            usuario_id: usuario.id
+        }).first();
+
+        if (!cobrancaEncontrada) {
+            return res.status(404).json('Cobranca não encontrada!');
+        }
+
+        const cobrancaExcluida = await knex('cobrancas').where({
+            id,
+            usuario_id: usuario.id
+        }).del();
+
+        if (!cobrancaExcluida) {
+            return res.status(400).json("Erro ao excluir a cobrança!");
+        }
+
+        return res.status(200).json('Cobrança excluída com sucesso!');
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+}
+
 module.exports = {
     cadastrarCobranca,
-    listarCobrancas
+    listarCobrancas,
+    excluirCobranca
 };
