@@ -110,6 +110,13 @@ const excluirCobranca = async (req, res) => {
             return res.status(404).json('Cobranca não encontrada!');
         }
 
+        if (cobrancaEncontrada.status === 'PAGO') {
+            return res.status(404).json('Você não pode excluir uma cobrança paga!');
+        }
+        if (cobrancaEncontrada.vencimento < new Date) {
+            return res.status(404).json('Você não pode excluir uma cobrança vencida!');
+        }
+
         const cobrancaExcluida = await knex('cobrancas').where({
             id,
             usuario_id: usuario.id
