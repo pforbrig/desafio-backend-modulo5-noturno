@@ -87,7 +87,7 @@ const obterCobranca = async (req, res) => {
                 cobranca.status = 'VENCIDA'
             }
         }
-        cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy');
+        cobranca.vencimentoFormatado = format(cobranca.vencimento, 'dd/MM/yyyy');
 
         res.status(200).json(cobranca);
 
@@ -158,7 +158,7 @@ const editarCobranca = async (req, res) => {
             .update({
                 descricao,
                 status,
-                valor,
+                valor: (valor.slice(2).replace(',', '')),
                 vencimento,
                 cliente_id
             });
