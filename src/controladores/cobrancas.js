@@ -65,6 +65,37 @@ const listarCobrancas = async (req, res) => {
     }
 }
 
+const obterCobranca = async (req, res) => {
+    const { id } = req.params
+
+    try {
+
+        const cobranca = await knex('cobrancas')
+            .join('clientes', 'cliente_id', 'clientes.id')
+            .select('cobrancas.id', 'clientes.nome', 'cobrancas.descricao', 'cobrancas.valor', 'cobrancas.vencimento', 'cobrancas.status')
+            .where({ 'cobrancas.usuario_id': req.usuario.id, 'cobrancas.id': id })
+            .first();
+
+        if (!cobranca) {
+            return res.status(400).json("Não foi possivel buscar a cobranca.");
+        }
+
+        cobranca.valor = (cobranca.valor / 100).toLocaleString('pt-br', { minimumFractionDigits: 2 });
+
+        if (cobranca.status === 'PENDENTE') {
+            if (+cobranca.vencimento < new Date()) {
+                cobranca.status = 'VENCIDA'
+            }
+        }
+        cobranca.vencimento = format(cobranca.vencimento, 'dd/MM/yyyy');
+
+        res.status(200).json(cobranca);
+
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+}
+
 const excluirCobranca = async (req, res) => {
     const { usuario } = req;
     const { id } = req.params;
@@ -144,5 +175,6 @@ module.exports = {
     cadastrarCobranca,
     listarCobrancas,
     excluirCobranca,
-    editarCobranca
+    editarCobranca,
+    obterCobranca
 };
