@@ -143,7 +143,7 @@ const editarCobranca = async (req, res) => {
             return res.status(404).json('Cobrança não encontrada ou não está vinculado ao usuario logado!');
         }
 
-        const cobrancaAtualizada = await knex('cobranca')
+        const cobrancaAtualizada = await knex('cobrancas')
             .where({
                 id,
                 usuario_id: req.usuario.id
