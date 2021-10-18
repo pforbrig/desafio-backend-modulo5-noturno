@@ -126,7 +126,7 @@ const excluirCobranca = async (req, res) => {
 }
 
 const editarCobranca = async (req, res) => {
-    const { descricao, status, valor, vencimento } = req.body;
+    const { descricao, status, valor, vencimento, cliente_id } = req.body;
     const { id } = req.params;
 
     if (!descricao && !status && !valor && !vencimento) {
@@ -152,7 +152,8 @@ const editarCobranca = async (req, res) => {
                 descricao,
                 status,
                 valor,
-                vencimento
+                vencimento,
+                cliente_id
             });
 
         if (!cobrancaAtualizada) {
