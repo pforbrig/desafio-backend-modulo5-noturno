@@ -158,7 +158,7 @@ const editarCobranca = async (req, res) => {
             .update({
                 descricao,
                 status,
-                valor: (valor.slice(2).replace(',', '')),
+                valor: (valor && valor.slice(2).replace(',', '')),
                 vencimento,
                 cliente_id
             });
