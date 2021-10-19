@@ -73,7 +73,8 @@ const listarClientes = async (req, res) => {
 
             const cobrancasVencidas = await knex('cobrancas')
                 .where({ cliente_id: cliente.id })
-                .andWhere('vencimento', '<', new Date());
+                .andWhere('vencimento', '<', new Date())
+                .whereNot('status', 'PAGO');
 
             if (cobrancasVencidas.length > 0) {
                 cliente.status = 'INADIMPLENTE'
