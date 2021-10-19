@@ -34,7 +34,7 @@ const listarCobrancas = async (req, res) => {
 
         const cobrancasDoUsuario = await knex('cobrancas')
             .join('clientes', 'cliente_id', 'clientes.id')
-            .select('cobrancas.id', 'clientes.nome', 'cobrancas.descricao', 'cobrancas.valor', 'cobrancas.vencimento', 'cobrancas.status')
+            .select('cobrancas.id', 'clientes.nome', 'cobrancas.descricao', 'cobrancas.valor', 'cobrancas.vencimento', 'cobrancas.status', 'clientes.cpf', 'clientes.email')
             .where({ 'cobrancas.usuario_id': id });
 
         if (!cobrancasDoUsuario) {
